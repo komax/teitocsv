@@ -56,8 +56,8 @@ class TEIFile(object):
         if not title_elem:
             return ''
         
-        if title_elem.get("level") in ['j', 'u', 'm', 's', 'a'] and\
-            title_elem.get("type") == "main":
+        if title_elem["level"] in ['j', 'u', 'm', 's', 'a'] and\
+            title_elem["type"] == "main":
             return title_elem.getText()
         else:
             return ''

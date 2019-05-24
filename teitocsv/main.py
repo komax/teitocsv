@@ -19,28 +19,30 @@ def all_teis(input_dir):
     return sorted(Path(input_dir).glob('*.tei.xml'))
 
 
+def tei_to_csv_entry(tei_file):
+    tei = TEIFile(tei_file)
+    print(f"Handled {tei_file}")
+    return tei.basename(), tei.doi(), tei.title(), tei.published_in()
+
+
 def main():
     parser = set_up_argparser()
     args = parser.parse_args()
     
     result_csv = pd.DataFrame(columns=['ID', 'DOI','Title', 'Journal'])
 
-    for tei_file in all_teis(args.inputdir):
-        tei = TEIFile(tei_file)
-        result_csv = result_csv.append({
-            'ID':tei.basename(),
-            'DOI':tei.doi(),
-            'Title':tei.title(),
-            'Journal':tei.published_in()}, ignore_index=True)
+    teis = all_teis(args.inputdir)
 
-    print(result_csv)
+    pool = Pool()
+    csv_entries = pool.map(tei_to_csv_entry, teis)
+    print(csv_entries)
+    
+    print("Done with parsing")
+    result_csv = pd.DataFrame(csv_entries, columns=['ID', 'DOI','Title', 'Journal'])
+    print("Done with appending")
 
-    args.outfile
-
-    #pool = Pool()
-
-    #pool.map(func, teis)
-    pass
+    result_csv.to_csv(args.outfile, index=False)
+    print("Done with csv")
 
 if __name__ == '__main__':
     main()

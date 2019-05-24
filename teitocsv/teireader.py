@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from pathlib import Path
 
-from bs4 import BeautifulSoup 
+from bs4 import BeautifulSoup
+
 
 
 def read_tei(tei_file):
@@ -28,6 +30,14 @@ class TEIFile(object):
     def __init__(self, filename):
         self.filename = filename
         self.soup = read_tei(filename)
+
+    def basename(self):
+        stem = Path(self.filename).stem
+        if stem.endswith('.tei'):
+            # Return base name without tei file
+            return stem[0:-4]
+        else:
+            return stem
 
     def doi(self):
         idno_elem = self.soup.find('idno', type='DOI')
@@ -67,6 +77,7 @@ class TEIFile(object):
 def main():
     #tei = TEIFile("/Users/mk21womu/data/steph_bacteria_text_mining/grobid-output/Winstel_Kuhner_et_al._2015_-_Wall_Teichoic_Acid_Glycosylation_Governs.tei.xml")
     tei = TEIFile("/Users/mk21womu/data/steph_bacteria_text_mining/grobid-output/Aliyu_Maayer_et_al._2016_-_The_genome_of_the_Antarctic.tei.xml")
+    print(tei.basename())
     print(tei.doi())
     print(tei.title())
     print(tei.authors())

@@ -23,3 +23,17 @@ or
 $ source activate tei2csv
 ```
 Alternatively use a venv from your python installation.
+1. Create the virtual environment
+```bash
+$ python3 -m venv env
+```
+
+2. Activate the virtual environment
+```bash
+$ source env/bin/activate
+```
+
+3. Install packages
+```bash
+$ pip install --requirement=requirements.txt
+```

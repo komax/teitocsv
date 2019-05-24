@@ -41,7 +41,10 @@ class TEIFile(object):
 
     def doi(self):
         idno_elem = self.soup.find('idno', type='DOI')
-        return idno_elem.getText()
+        if not idno_elem:
+            return ''
+        else:
+            return idno_elem.getText()
 
     def title(self):
         return self.soup.title.getText()
@@ -66,8 +69,8 @@ class TEIFile(object):
         if not title_elem:
             return ''
         
-        if title_elem["level"] in ['j', 'u', 'm', 's', 'a'] and\
-            title_elem["type"] == "main":
+        if title_elem.get("level") in ['j', 'u', 'm', 's', 'a'] and\
+            title_elem.get("type") == "main":
             return title_elem.getText()
         else:
             return ''

@@ -1,3 +1,4 @@
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -74,6 +75,19 @@ class TEIFile(object):
             return title_elem.getText()
         else:
             return ''
+
+
+class BacteriaPaper(TEIFile):
+    sequencing_method = re.compile(r'([Ii]llumina|[Ss]olexa|454|[Ii]ontorrent)')
+    miseq_pattern = re.compile(r'(MiSeq).+?([Ii]llumina)')
+    hiseq_pattern = re.compile(r'(HiSeq).+?([Ii]llumina)')
+    primer_515 = re.compile(r'(515\s*[fF]?|(Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3)')
+    primer_806 = re.compile(r'(806\s*[rR]?|(Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′)')
+    gene_region_16ness = re.compile(r'(16[sS]rRNA)')
+    gene_regions = re.compile(r'[vV]\d\s*(-?[vV]\d\s*)?region|region\s*[vV]\d(-?[vV]\d\s*)?')
+
+    def __init__(self, filename):
+        super().__init__(filename)
 
 
 

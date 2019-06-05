@@ -150,8 +150,13 @@ class BacteriaPaper(TEIFile):
     gene_region_16ness = re.compile(r'(16[sS]rRNA)')
     gene_regions = re.compile(r'[vV]\d\s*(-?[vV]\d\s*)?region|region\s*[vV]\d(-?[vV]\d\s*)?')
 
+    accession_no_matcher = AccessionNumberMatcher()
+
     def __init__(self, filename):
         super().__init__(filename)
+
+    def accession_numbers(self):
+        return BacteriaPaper.accession_no_matcher.accession_numbers(self.text)
 
 
 

@@ -52,8 +52,9 @@ class AccessionNumberMatcher(object):
     ·         DRZ
     ·         SRZ
         """
+        analysis_pattern = r'(E|D|S)RZ\d{6,}'
 
-        combined_pattern = f'({"|".join([studies_pattern, biosamples_pattern, samples_pattern, experiments_pattern])})'
+        combined_pattern = f'({"|".join([studies_pattern, biosamples_pattern, samples_pattern, experiments_pattern, analysis_pattern])})'
 
         self.pattern = combined_pattern
         self.regex = re.compile(combined_pattern)

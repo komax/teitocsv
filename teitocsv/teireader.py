@@ -64,49 +64,6 @@ class AccessionNumberMatcher(object):
         for match in matches:
             accession_number = match[0]
             yield accession_number
-        
-
-
-
-def accession_number_regex():
-    """
-
-
-·         EDR
-·         PRJ
-
-·         DRR
-·         SRR
-    """
-    """
-·         ERP
-·         DRP
-·         SRP
-    """
-    studies_pattern = r'(E|D|S)RP\d{6,}'
-    """
-        ·         SAME
-·         SAMD
-·         SAMN
-    """
-    biosamples_pattern = r'SAM(E|D|N)[A-Z]?\d+'
-    """
-·         ERS
-
-    """
-    samples_pattern = r'(E|D|S)RS\d{6,}'
-    """
-·         ERX
-·         DRX
-·         SRX
-    """
-    experiments_pattern = r'(E|D|S)RX\d{6,}'
-    
-    """
-    ·         ERZ
-·         DRZ
-·         SRZ
-    """
 
 
 @dataclass
@@ -120,6 +77,7 @@ class TEIFile(object):
     def __init__(self, filename):
         self.filename = filename
         self.soup = read_tei(filename)
+        self._text = None
 
     def basename(self):
         stem = Path(self.filename).stem
@@ -138,6 +96,9 @@ class TEIFile(object):
 
     def title(self):
         return self.soup.title.getText()
+
+    def abstract(self):
+        return self.soup.abstract.getText(separator=' ', strip=True)
 
     def authors(self):
         authors_in_header = self.soup.analytic.find_all('author')
@@ -164,6 +125,20 @@ class TEIFile(object):
             return title_elem.getText()
         else:
             return ''
+    
+    @property
+    def text(self):
+        if not self._text:
+            divs_text = []
+            for div in self.soup.body.find_all("div"):
+                # div is neither an appendix nor references, just plain text.
+                if not div.get("type"):
+                    div_text = div.get_text(separator=' ', strip=True)
+                    divs_text.append(div_text)
+
+            plain_text = " ".join(divs_text)
+            self._text = plain_text
+        return self._text
 
 
 class BacteriaPaper(TEIFile):

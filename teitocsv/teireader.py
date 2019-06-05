@@ -20,6 +20,94 @@ def elem_to_text(elem, default=''):
         return default
 
 
+class AccessionNumberMatcher(object):
+    def __init__(self):
+
+        """
+    ·         ERP
+    ·         DRP
+    ·         SRP
+        """
+        studies_pattern = r'(E|D|S)RP\d{6,}'
+        """
+            ·         SAME
+    ·         SAMD
+    ·         SAMN
+        """
+        biosamples_pattern = r'SAM(E|D|N)[A-Z]?\d+'
+        """
+    ·         ERS
+
+        """
+        samples_pattern = r'(E|D|S)RS\d{6,}'
+        """
+    ·         ERX
+    ·         DRX
+    ·         SRX
+        """
+        experiments_pattern = r'(E|D|S)RX\d{6,}'
+    
+        """
+        ·         ERZ
+    ·         DRZ
+    ·         SRZ
+        """
+
+        combined_pattern = f'({"|".join([studies_pattern, biosamples_pattern, samples_pattern, experiments_pattern])})'
+
+        self.pattern = combined_pattern
+        self.regex = re.compile(combined_pattern)
+
+    def accession_numbers(self, text):
+        matches = self.regex.findall(text)
+        for match in matches:
+            accession_number = match[0]
+            yield accession_number
+        
+
+
+
+def accession_number_regex():
+    """
+
+
+·         EDR
+·         PRJ
+
+·         DRR
+·         SRR
+    """
+    """
+·         ERP
+·         DRP
+·         SRP
+    """
+    studies_pattern = r'(E|D|S)RP\d{6,}'
+    """
+        ·         SAME
+·         SAMD
+·         SAMN
+    """
+    biosamples_pattern = r'SAM(E|D|N)[A-Z]?\d+'
+    """
+·         ERS
+
+    """
+    samples_pattern = r'(E|D|S)RS\d{6,}'
+    """
+·         ERX
+·         DRX
+·         SRX
+    """
+    experiments_pattern = r'(E|D|S)RX\d{6,}'
+    
+    """
+    ·         ERZ
+·         DRZ
+·         SRZ
+    """
+
+
 @dataclass
 class Person:
     firstname: str

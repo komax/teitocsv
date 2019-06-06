@@ -157,7 +157,7 @@ class BacteriaPaper(TEIFile):
     primer_515 = re.compile(r'(515\s*[fF]?|(Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3)')
     primer_806 = re.compile(r'(806\s*[rR]?|(Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′)')
     gene_region_16ness = re.compile(r'(16[sS]rRNA)')
-    gene_regions = re.compile(r'[vV]\d\s*(-?[vV]\d\s*)?region|region\s*[vV]\d(-?[vV]\d\s*)?')
+    gene_regions_regex = re.compile(r'([vV]\d)\s*(?:\s*-?\s*([vV]\d)\s*)?region|region\s*([vV]\d)(?:\s*-?\s*([vV]\d))?')
 
     accession_no_matcher = AccessionNumberMatcher()
 
@@ -166,6 +166,31 @@ class BacteriaPaper(TEIFile):
 
     def accession_numbers(self):
         return BacteriaPaper.accession_no_matcher.accession_numbers(self.text)
+
+    def _has_match_16ness(self, text):
+        matches = BacteriaPaper.gene_region_16ness.findall(text)
+        return bool(matches)
+
+    def contains_16ness(self):
+        if self._has_match_16ness(self.title):
+            return True
+        elif self._has_match_16ness(self.abstract):
+            return True
+        else:
+            return self._has_match_16ness(self.text)
+        return False
+
+    def _gene_region_matches(self, text):
+        matches = BacteriaPaper.gene_regions_regex.findall(text)
+        regions = set()
+        for match in matches:
+            regions.union(set(match))
+        return regions
+
+    def gene_regions(self):
+        regions_in_title = self._gene_region_matches(self.title)
+        regions_in_text = self._gene_region_matches(self.text)
+        return regions_in_title.union(regions_in_text)
 
 
 

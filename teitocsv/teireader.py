@@ -78,6 +78,8 @@ class TEIFile(object):
         self.filename = filename
         self.soup = read_tei(filename)
         self._text = None
+        self._title = ''
+        self._abstract = ''
 
     def basename(self):
         stem = Path(self.filename).stem
@@ -94,11 +96,16 @@ class TEIFile(object):
         else:
             return idno_elem.getText()
 
+    @property
     def title(self):
         return self.soup.title.getText()
 
+    @property
     def abstract(self):
-        return self.soup.abstract.getText(separator=' ', strip=True)
+        if not self._abstract:
+            abstract = self.soup.abstract.getText(separator=' ', strip=True)
+            self._abstract = abstract
+        return self._abstract
 
     def authors(self):
         authors_in_header = self.soup.analytic.find_all('author')

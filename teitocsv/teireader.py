@@ -98,7 +98,9 @@ class TEIFile(object):
 
     @property
     def title(self):
-        return self.soup.title.getText()
+        if not self._title:
+            self._title = self.soup.title.getText()
+        return self._title
 
     @property
     def abstract(self):

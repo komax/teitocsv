@@ -26,6 +26,9 @@ def tei_to_csv_entries(tei_file):
     for accession_number in tei.accession_numbers():
         entry = tei.basename(), tei.doi(), is_16_ness, accession_number
         entries.append(entry)
+    if not entries:
+        entry = tei.basename(), tei.doi(), is_16_ness, ''
+        entries.append(entry)
     print(f"Handled {tei_file}")
     return entries
 

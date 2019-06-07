@@ -21,9 +21,10 @@ def all_teis(input_dir):
 
 def tei_to_csv_entries(tei_file):
     tei = BacteriaPaper(tei_file)
+    is_16_ness = tei.contains_16ness()
     entries = []
     for accession_number in tei.accession_numbers():
-        entry = tei.basename(), tei.doi(), accession_number
+        entry = tei.basename(), tei.doi(), is_16_ness, accession_number
         entries.append(entry)
     print(f"Handled {tei_file}")
     return entries
@@ -33,7 +34,7 @@ def main():
     parser = set_up_argparser()
     args = parser.parse_args()
     
-    result_csv = pd.DataFrame(columns=['ID', 'DOI','accession'])
+    result_csv = pd.DataFrame(columns=['ID', 'DOI', '16ness', 'accession'])
 
     teis = all_teis(args.inputdir)
 
@@ -47,7 +48,7 @@ def main():
         csv_data.extend(entry)
     
     print("Done with parsing")
-    result_csv = pd.DataFrame(csv_data, columns=['ID', 'DOI','accession'])
+    result_csv = pd.DataFrame(csv_data, columns=['ID', 'DOI', '16ness', 'accession'])
     print("Done with appending")
 
     result_csv.to_csv(args.outfile, index=False)

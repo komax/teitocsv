@@ -19,13 +19,37 @@ def all_teis(input_dir):
     return sorted(Path(input_dir).glob('*.tei.xml'))
 
 
+def repr_gene_regions(regions, default_length=8):
+    length_regions = len(regions)
+    if length_regions > default_length:
+        raise RuntimeError(
+            "Gene region input is longer than the ouput:{} > {}".format(
+                length_regions, default_length))
+    elif length_regions == default_length:
+        return regions
+    else:
+        # always non-empty.
+        leftover_size = default_length - length_regions
+        expanded_regions = list(regions)
+        remaining_items = [''] * leftover_size
+        expanded_regions.extend(remaining_items)
+        return expanded_regions
+
+
 def tei_to_csv_entries(tei_file):
     tei = BacteriaPaper(tei_file)
+
+    # Check if 16s RNA is mentioned in the paper.
     is_16_ness = tei.contains_16ness()
+
+    # Output all gene regions.
+
     entries = []
+    # Expand accession numbers from the paper if present.
     for accession_number in tei.accession_numbers():
         entry = tei.basename(), tei.doi(), is_16_ness, accession_number
         entries.append(entry)
+    # Otherwise empty string.
     if not entries:
         entry = tei.basename(), tei.doi(), is_16_ness, ''
         entries.append(entry)
@@ -37,7 +61,7 @@ def main():
     parser = set_up_argparser()
     args = parser.parse_args()
     
-    result_csv = pd.DataFrame(columns=['ID', 'DOI', '16ness', 'accession'])
+    result_csv = pd.DataFrame(columns=['ID', 'DOI', '16ness', 'accession', 'gene_region1', 'gene_region2', 'gene_region3', 'gene_region4', 'gene_region5', 'gene_region6', 'gene_region7', 'gene_region8'])
 
     teis = all_teis(args.inputdir)
 

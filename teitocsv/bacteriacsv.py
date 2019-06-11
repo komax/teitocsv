@@ -43,15 +43,16 @@ def tei_to_csv_entries(tei_file):
     is_16_ness = tei.contains_16ness()
 
     # Output all gene regions.
+    gene_regions = repr_gene_regions(tei.gene_regions())
 
     entries = []
     # Expand accession numbers from the paper if present.
     for accession_number in tei.accession_numbers():
-        entry = tei.basename(), tei.doi(), is_16_ness, accession_number
+        entry = tei.basename(), tei.doi(), is_16_ness, accession_number, *gene_regions
         entries.append(entry)
     # Otherwise empty string.
     if not entries:
-        entry = tei.basename(), tei.doi(), is_16_ness, ''
+        entry = tei.basename(), tei.doi(), is_16_ness, '', *gene_regions
         entries.append(entry)
     print(f"Handled {tei_file}")
     return entries
@@ -75,7 +76,7 @@ def main():
         csv_data.extend(entry)
     
     print("Done with parsing")
-    result_csv = pd.DataFrame(csv_data, columns=['ID', 'DOI', '16ness', 'accession'])
+    result_csv = pd.DataFrame(csv_data, columns=['ID', 'DOI', '16ness', 'accession', 'gene_region1', 'gene_region2', 'gene_region3', 'gene_region4', 'gene_region5', 'gene_region6', 'gene_region7', 'gene_region8'])
     print("Done with appending")
 
     result_csv.to_csv(args.outfile, index=False)

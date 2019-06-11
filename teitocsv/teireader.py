@@ -156,7 +156,7 @@ class BacteriaPaper(TEIFile):
     hiseq_pattern = re.compile(r'(HiSeq).+?([Ii]llumina)')
     primer_515 = re.compile(r'(515\s*[fF]?|(Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3)')
     primer_806 = re.compile(r'(806\s*[rR]?|(Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′)')
-    gene_region_16ness = re.compile(r'(16[sS]rRNA)')
+    gene_region_16ness = re.compile(r'(16[sS]\s*rRNA)')
     gene_regions_regex = re.compile(r'([vV]\d)\s*(?:\s*-?\s*([vV]\d)\s*)?region|region\s*([vV]\d)(?:\s*-?\s*([vV]\d))?')
 
     accession_no_matcher = AccessionNumberMatcher()
@@ -190,7 +190,12 @@ class BacteriaPaper(TEIFile):
     def gene_regions(self):
         regions_in_title = self._gene_region_matches(self.title)
         regions_in_text = self._gene_region_matches(self.text)
-        return regions_in_title.union(regions_in_text)
+        regions = regions_in_title.union(regions_in_text)
+        # Remove empty str from the gene regions.
+        if '' in regions:
+            regions.remove('')
+        # Sort the results based on the digit: v1 before V6
+        return sorted(regions, key=lambda r: r[1])
 
 
 

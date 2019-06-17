@@ -22,7 +22,7 @@ def all_teis(input_dir):
 def tei_to_csv_entry(tei_file):
     tei = TEIFile(tei_file)
     print(f"Handled {tei_file}")
-    return tei.basename(), tei.doi(), tei.title(), tei.published_in()
+    return tei.basename(), tei.doi(), tei.title, tei.published_in()
 
 
 def main():

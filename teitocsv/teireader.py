@@ -4,6 +4,7 @@ from pathlib import Path
 
 from bs4 import BeautifulSoup
 
+from pdftotext_reader import PDFToText
 from bacteria_regex import AccessionNumberMatcher, BacteriaMatcher
 
 
@@ -108,14 +109,30 @@ class TEIFile(object):
 
 class BacteriaPaper(TEIFile):
 
-    def __init__(self, filename):
+    def __init__(self, filename, pdftotext_directory):
         super().__init__(filename)
+        self.pdftotext_dir = pdftotext_directory
+
+        self._pdftotext = ''
+
+    @property
+    def pdftotext(self):
+        if not self._pdftotext:
+            path_pdftotext = Path(self.pdftotext_dir) / f"{self.basename()}.txt"
+            self._pdftotext = PDFToText(path_pdftotext)
+        return self._pdftotext
 
     def accession_numbers(self):
-        return BacteriaMatcher.accession_numbers(self.text)
+        accession_numbers = list(BacteriaMatcher.accession_numbers(self.text))
+        if accession_numbers:
+            # if accession numbers found return them.
+            return accession_numbers
+        else:
+            # Otherwise try to retrieve them from the pdftotext.
+            return self.pdftotext.accession_numbers()
 
     def _has_match_16ness(self, text):
-        matches = BacteriaMatcher.matches_16ness(text)
+        matches = BacteriaMatcher.matches_16ness(self.text)
         return bool(matches)
 
     def contains_16ness(self):

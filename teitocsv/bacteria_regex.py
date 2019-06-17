@@ -70,7 +70,8 @@ class DataSourceMatcher(object):
     def data_source(self, text, default_val=''):
         match = self.regex.search(text)
         if match:
-            return match.group(0)
+            data_source = match.group(0)
+            return data_source.lower()
         else:
             return default_val
 

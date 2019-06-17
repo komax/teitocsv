@@ -26,7 +26,7 @@ class AccessionNumberMatcher(object):
         """
         ·         PRJ
         """
-        projects_pattern = r'PRJ(E|D|N)[A-Z][0-9]+'
+        projects_pattern = r'PRJ(E|D|N|C)[A-Z][0-9]+'
 
         """
     ·         ERP
@@ -163,8 +163,8 @@ class TEIFile(object):
 
 class BacteriaPaper(TEIFile):
     sequencing_method = re.compile(r'([Ii]llumina|[Ss]olexa|454|[Ii]ontorrent)')
-    miseq_pattern = re.compile(r'(MiSeq).+?([Ii]llumina)')
-    hiseq_pattern = re.compile(r'(HiSeq).+?([Ii]llumina)')
+    miseq_pattern = re.compile(r'([Mm]i[Ss]eq).+?([Ii]llumina)')
+    hiseq_pattern = re.compile(r'([Hh]i[Ss]eq).+?([Ii]llumina)')
     primer_515 = re.compile(r'(515\s*[fF]?|(Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3)')
     primer_806 = re.compile(r'(806\s*[rR]?|(Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′)')
     gene_region_16ness = re.compile(r'(16[sS]\s*rRNA)')

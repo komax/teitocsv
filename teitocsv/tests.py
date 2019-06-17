@@ -66,6 +66,15 @@ class TestAccessionNumberMatcher(unittest.TestCase):
         accession_numbers = list(self.matcher.accession_numbers(text))
         self.assertEqual(accession_numbers, ['ERZ111333', 'DRZ666333', 'SRZ333222'])
 
+    def test_chinese_accession_number_matches(self):
+        text = """
+        This paragraph has accession number PRJCA001121.
+
+        """
+        accession_numbers = list(self.matcher.accession_numbers(text))
+        self.assertEqual(accession_numbers, ['PRJCA001121'])
+
+
 
 if __name__ == '__main__':
     unittest.main()

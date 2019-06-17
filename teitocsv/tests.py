@@ -1,6 +1,6 @@
 import unittest
 
-from teireader import AccessionNumberMatcher
+from bacteria_regex import AccessionNumberMatcher
 
 
 class TestAccessionNumberMatcher(unittest.TestCase):

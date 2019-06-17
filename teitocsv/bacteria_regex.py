@@ -59,6 +59,22 @@ class AccessionNumberMatcher(object):
             yield accession_number
 
 
+class DataSourceMatcher(object):
+    def __init__(self):
+        sources = ['Figshare', 'QIITA', 'MG-RAST', 'bioproject']
+
+        combined_pattern = f'({"|".join(sources)})'
+        self.pattern = combined_pattern
+        self.regex = re.compile(combined_pattern, re.I)
+
+    def data_source(self, text, default_val=''):
+        match = self.regex.search(text)
+        if match:
+            return match.group(0)
+        else:
+            return default_val
+
+
 class BacteriaMatcher(object):
     sequencing_method = re.compile(r'([Ii]llumina|[Ss]olexa|454|[Ii]ontorrent)')
     miseq_pattern = re.compile(r'([Mm]i[Ss]eq).+?([Ii]llumina)')

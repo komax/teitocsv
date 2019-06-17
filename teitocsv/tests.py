@@ -1,6 +1,6 @@
 import unittest
 
-from bacteria_regex import AccessionNumberMatcher
+from bacteria_regex import AccessionNumberMatcher, DataSourceMatcher
 
 
 class TestAccessionNumberMatcher(unittest.TestCase):
@@ -74,6 +74,25 @@ class TestAccessionNumberMatcher(unittest.TestCase):
         accession_numbers = list(self.matcher.accession_numbers(text))
         self.assertEqual(accession_numbers, ['PRJCA001121'])
 
+
+class DataSourceMatcherTest(unittest.TestCase):
+
+    def setUp(self):
+        self.matcher = DataSourceMatcher()
+
+    def test_find_figshare(self):
+        text = """
+        All sequence data will be made available through FigShare, http://dx.doi.org/10.22222/m9.figshare.1234567890.
+        """
+        data_source = self.matcher.data_source(text)
+        self.assertEqual(data_source, "FigShare")
+
+    def test_cannot_find_any_data_source(self):
+        text = """
+        Foo bar is great, but this is bogus.
+        """
+        data_source = self.matcher.data_source(text)
+        self.assertEqual(data_source, '')
 
 
 if __name__ == '__main__':

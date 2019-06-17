@@ -57,3 +57,23 @@ class AccessionNumberMatcher(object):
         for match in matches:
             accession_number = match[0]
             yield accession_number
+
+
+class BacteriaMatcher(object):
+    sequencing_method = re.compile(r'([Ii]llumina|[Ss]olexa|454|[Ii]ontorrent)')
+    miseq_pattern = re.compile(r'([Mm]i[Ss]eq).+?([Ii]llumina)')
+    hiseq_pattern = re.compile(r'([Hh]i[Ss]eq).+?([Ii]llumina)')
+    primer_515 = re.compile(r'(515\s*[fF]?|(Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3)')
+    primer_806 = re.compile(r'(806\s*[rR]?|(Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′)')
+    gene_region_16ness = re.compile(r'(16[sS]\s*rRNA)')
+    gene_regions_regex = re.compile(r'([vV]\d)\s*(?:\s*-?\s*([vV]\d)\s*)?regions?|regions?\s*([vV]\d)(?:\s*-?\s*([vV]\d))?')
+
+    accession_no_matcher = AccessionNumberMatcher()
+
+    @staticmethod
+    def accession_numbers(text):
+        return BacteriaMatcher.accession_no_matcher.accession_numbers(text)
+
+    @staticmethod
+    def matches_16ness(text):
+        return BacteriaMatcher.gene_region_16ness.findall(text)

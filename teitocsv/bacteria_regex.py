@@ -135,7 +135,8 @@ class Primer515Matcher(UnionPatternMatcher):
         primer_515 = [
             r'515\s*(:?[fF](?:wd)?)?',
             r'(:?[fF](?:wd)?)?\s*515',
-            r'(?:Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3'
+            r'(?:Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3',
+            r"5'-GTGCCAGCMGCCGCGGTAA"
             ]
         
         super().__init__(patterns=primer_515)
@@ -150,12 +151,19 @@ class Primer515Matcher(UnionPatternMatcher):
 
 class Primer806Matcher(UnionPatternMatcher):
     def __init__(self):
-        primer_806 = [r'806\s*[rR]?', r'(?:Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′']
+        primer_806 = [
+            r'806\s*[rR]?', 
+            r'(?:Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′',
+            r"5'-GGACTACHVHHHTWTCTAAT"
+        ]
 
         super().__init__(patterns=primer_806)
 
     def primer_806(self, text, default_val=''):
-        return self.match(text, default_val)
+        if self.match(text):
+            return '806r'
+        else:
+            return default_val
 
 
 class GeneRegionsMatcher(UnionPatternMatcher):

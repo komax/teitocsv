@@ -209,7 +209,7 @@ class GeneRegionsTest(unittest.TestCase):
         self.assertCountEqual(regions, set(['v1', 'v2', 'v3', 'v6']))
 
     def test_region_first_enumeration_then(self):
-        text = "regions v1, V2,        v3, and v6 regions"
+        text = "regions v1, V2,        v3 and v6"
         regions = self.matcher.gene_regions(text)
         self.assertCountEqual(regions, set(['v1', 'v2', 'v3', 'v6']))
 

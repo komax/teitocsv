@@ -153,8 +153,12 @@ class Primer806Matcher(UnionPatternMatcher):
 class GeneRegionsMatcher(UnionPatternMatcher):
     def __init__(self):
         gene_regions_patterns = [
-            r'([vV]\d)\s*(?:\s*-?\s*([vV]\d)\s*)?regions?',
-            r'regions?\s*([vV]\d)(?:\s*-?\s*([vV]\d))?'
+            r'([vV]\d),\s*([vV]\d)',
+            r'([vV]\d)?,?\s+and\s*([vV]\d)',
+            r'regions\s+([vV]\d)(?:\s*(?:-|and)?\s*([vV]\d)\s*)?',
+            r'([vV]\d)\s+(?:\s*(?:-|and)?\s*([vV]\d)\s*)regions',
+            r'region\s+([vV]\d)',
+            r'([vV]\d)\s+region'
         ]
 
         super().__init__(patterns=gene_regions_patterns)
@@ -165,7 +169,7 @@ class GeneRegionsMatcher(UnionPatternMatcher):
         for match in matches:
             if match:
                 # check all groups but group(0)
-                for region in match[1:-1]:
+                for region in match[1:]:
                     # Add only non-empty groups.
                     if region:
                         regions.add(region.lower())

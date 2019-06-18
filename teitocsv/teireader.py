@@ -151,9 +151,6 @@ class BacteriaPaper(TEIFile):
         regions_in_title = self._gene_region_matches(self.title)
         regions_in_text = self._gene_region_matches(self.text)
         regions = regions_in_title.union(regions_in_text)
-        # Remove empty str from the gene regions.
-        if '' in regions:
-            regions.remove('')
         # Sort the results based on the digit: v1 before V6
         return sorted(regions, key=lambda r: r[1])
 

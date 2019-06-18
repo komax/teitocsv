@@ -213,5 +213,48 @@ class GeneRegionsTest(unittest.TestCase):
         regions = self.matcher.gene_regions(text)
         self.assertCountEqual(regions, set(['v1', 'v2', 'v3', 'v6']))
 
+    def test_no_regions(self):
+        text = "This is a text without any gene regions"
+        self.assertFalse(self.matcher.gene_regions(text))
+
+
+class Primer515Test(unittest.TestCase):
+
+    def setUp(self):
+        self.matcher = bacteria_regex.Primer515Matcher()
+
+    def test_515f_cooccur_with806(self):
+        text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+        primer = self.matcher.primer_515(text)
+        self.assertEqual(primer, "515f")
+
+    def test_f515_matches(self):
+        text = "primers                 F           515 and          R 806"
+        primer = self.matcher.primer_515(text)
+        self.assertEqual(primer, "515f")
+
+    def test_no_primer(self):
+        text = "Bogus, spam, ham and nothing but text."
+        self.assertFalse(self.matcher.primer_515(text))
+    
+
+
+class Primer806Test(unittest.TestCase):
+
+    def setUp(self):
+        self.matcher = bacteria_regex.Primer806Matcher()
+
+    def test_806_cooccur_with515(self):
+        text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+        primer = self.matcher.primer_806(text)
+        self.assertEqual(primer, "806r")
+
+    def test_no_primer(self):
+        text = "Bogus, spam, ham and nothing but text."
+        self.assertFalse(self.matcher.primer_806(text))
+    
+
+
+
 if __name__ == '__main__':
     unittest.main()

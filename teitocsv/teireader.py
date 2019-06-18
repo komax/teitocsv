@@ -123,7 +123,7 @@ class BacteriaPaper(TEIFile):
         return self._pdftotext
 
     def accession_numbers(self):
-        accession_numbers = list(BacteriaMatcher.accession_numbers(self.text))
+        accession_numbers = BacteriaMatcher.accession_numbers(self.text)
         if accession_numbers:
             # if accession numbers found return them.
             return accession_numbers
@@ -145,11 +145,7 @@ class BacteriaPaper(TEIFile):
         return False
 
     def _gene_region_matches(self, text):
-        matches = BacteriaMatcher.gene_regions_regex.findall(text)
-        regions = set()
-        for match in matches:
-            regions.union(set(match))
-        return regions
+        return BacteriaMatcher.gene_regions(text)
 
     def gene_regions(self):
         regions_in_title = self._gene_region_matches(self.title)

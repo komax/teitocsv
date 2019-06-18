@@ -157,6 +157,24 @@ class BacteriaPaper(TEIFile):
         # Sort the results based on the digit: v1 before V6
         return sorted(regions, key=lambda r: r[1])
 
+    def _search_with(self, matcher_func, default_val=''):
+        match = matcher_func(self.title)
+        if match:
+            return match
+        else:
+            match = matcher_func(self.text)
+            if match:
+                return match
+            else:
+                return default_val
+
+    def sequencing_method(self):
+        return self._search_with(BacteriaMatcher.sequencing_method)
+
+    def data_source(self):
+        return self._search_with(BacteriaMatcher.data_source)
+    
+
 
 
 def main():

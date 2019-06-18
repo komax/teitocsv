@@ -89,12 +89,45 @@ class DataSourceMatcher(UnionPatternMatcher):
 
 class SequencingMethodMatcher(UnionPatternMatcher):
     def __init__(self):
-        sequencing_methods = ['Miseq', 'Hiseq', 'Illumina', 'Solexa', '454', 'Iontorrent']
+        # Check if miseq or hiseq are reported.
+        self.miseq_hiseq_matcher = UnionPatternMatcher(patterns=['Miseq', 'Hiseq'])
+
+        # Then check for illumina.
+        self.illumina_regex = re.compile('Illumina', re.I)
+
+        # Otherswise: check for emaining methods.
+        sequencing_methods = ['Solexa', '454', 'Iontorrent']
 
         super().__init__(patterns=sequencing_methods)
 
+    def matches(self, text):
+        # Override these methods as stated in __init__.
+        hi_miseq_matches = self.miseq_hiseq_matcher.matches(text)
+        if hi_miseq_matches:
+            return hi_miseq_matches
+        else:
+            illumina_matches = self.illumina_regex.findall(text)
+            if illumina_matches:
+                return [match.lower() for match in illumina_matches]
+            else:
+                super().matches(text)
+        
+
+    def match(self, text, default_val=''):
+        # Override these methods as stated in __init__.
+        hi_miseq_match = self.miseq_hiseq_matcher.match(text, default_val)
+        if hi_miseq_match:
+            return hi_miseq_match
+        else:
+            illumina_match = self.illumina_regex.search(text)
+            if illumina_match:
+                match = illumina_match.group(0)
+                return match.lower()
+            else:
+                super().match(text, default_val)
+
     def sequencing_method(self, text, default_val=''):
-        self.match(text, default_val)
+        return self.match(text, default_val)
 
 
 class Primer515Matcher(UnionPatternMatcher):

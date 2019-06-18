@@ -1,6 +1,6 @@
 import unittest
 
-from bacteria_regex import AccessionNumberMatcher, DataSourceMatcher
+from bacteria_regex import AccessionNumberMatcher, DataSourceMatcher, SequencingMethodMatcher
 
 
 class TestAccessionNumberMatcher(unittest.TestCase):
@@ -121,6 +121,28 @@ class DataSourceMatcherTest(unittest.TestCase):
         """
         data_source = self.matcher.data_source(text)
         self.assertEqual(data_source, '')
+
+
+class SequencingMethodTestCase(unittest.TestCase):
+    
+    def setUp(self):
+        self.matcher = SequencingMethodMatcher()
+    
+    def test_illumina_with_miseq(self):
+        text = """
+        The resulting foobar were purified by great amount of drudging using GEO Standard Kit. 
+        and sequenced using the 300PE protocol on MiSeq System (Illumina, United States).
+        """
+        seq_method = self.matcher.sequencing_method(text)
+        self.assertEqual(seq_method, 'miseq')
+
+    def test_illumina_with_hiseq(self):
+        text = """
+        The resulting foobar were purified by great amount of drudging using GEO Standard Kit. 
+        and sequenced using the 300PE protocol on HIseq System (Illumina, United States).
+        """
+        seq_method = self.matcher.sequencing_method(text)
+        self.assertEqual(seq_method, 'hiseq')
 
 
 if __name__ == '__main__':

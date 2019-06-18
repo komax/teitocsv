@@ -183,5 +183,35 @@ class GeneRegionsTest(unittest.TestCase):
         expected = set(["v4"])
         self.assertCountEqual(regions, expected)
 
+    def test_singleton_occurence_v_before_region(self):
+        text = "v2                       region"
+        regions = self.matcher.gene_regions(text)
+        self.assertCountEqual(regions, set(['v2']))
+
+    def test_two_regions_with_and_between(self):
+        text = "regions            V1     and        v2"
+        regions = self.matcher.gene_regions(text)
+        self.assertCountEqual(regions, set(['v1', 'v2']))
+
+    def test_two_regions_separated_by_minus(self):
+        text = "regions v2    -        V4"
+        regions = self.matcher.gene_regions(text)
+        self.assertCountEqual(regions, set(['v2', 'v4']))
+
+    def test_two_regions_separated_by_minus_then_region(self):
+        text = "v2    -        V4 regions"
+        regions = self.matcher.gene_regions(text)
+        self.assertCountEqual(regions, set(['v2', 'v4']))
+
+    def test_enumerated_regions(self):
+        text = "v1, V2,        v3, and v6 regions"
+        regions = self.matcher.gene_regions(text)
+        self.assertCountEqual(regions, set(['v1', 'v2', 'v3', 'v6']))
+
+    def test_region_first_enumeration_then(self):
+        text = "regions v1, V2,        v3, and v6 regions"
+        regions = self.matcher.gene_regions(text)
+        self.assertCountEqual(regions, set(['v1', 'v2', 'v3', 'v6']))
+
 if __name__ == '__main__':
     unittest.main()

@@ -133,8 +133,8 @@ class SequencingMethodMatcher(UnionPatternMatcher):
 class Primer515Matcher(UnionPatternMatcher):
     def __init__(self):
         primer_515 = [
-            r'515\s*[fF]?',
-            r'[fF]\s*515',
+            r'515\s*(:?[fF](?:wd)?)?',
+            r'(:?[fF](?:wd)?)?\s*515',
             r'(?:Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3'
             ]
         

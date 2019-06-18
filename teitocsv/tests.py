@@ -233,6 +233,11 @@ class Primer515Test(unittest.TestCase):
         primer = self.matcher.primer_515(text)
         self.assertEqual(primer, "515f")
 
+    def test_fwd_515_matches(self):
+        text = "primers                 Fwd           515 and          Rev 806"
+        primer = self.matcher.primer_515(text)
+        self.assertEqual(primer, "515f")
+
     def test_no_primer(self):
         text = "Bogus, spam, ham and nothing but text."
         self.assertFalse(self.matcher.primer_515(text))

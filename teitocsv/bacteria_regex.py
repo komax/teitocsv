@@ -141,7 +141,11 @@ class Primer515Matcher(UnionPatternMatcher):
         super().__init__(patterns=primer_515)
     
     def primer_515(self, text, default_val=''):
-        return self.match(text, default_val)
+        if self.match(text):
+            return '515f'
+        else:
+            return default_val
+
 
 
 class Primer806Matcher(UnionPatternMatcher):

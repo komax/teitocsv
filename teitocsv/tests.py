@@ -144,6 +144,20 @@ class SequencingMethodTestCase(unittest.TestCase):
         seq_method = self.matcher.sequencing_method(text)
         self.assertEqual(seq_method, 'hiseq')
 
+    def test_give_priority_to_illumina_over_solexa(self):
+        text = "SolexaQA: at-a-glance quality assessment of Illumina second-generation sequencing data"
+        seq_method = self.matcher.sequencing_method(text)
+        self.assertEqual(seq_method, 'illumina')
+
+    def test_iontorrent_in_url(self):
+        text = "were aligned against the reference genome using Tmap (http://github.com/iontorrent/TMAP)"
+        seq_method = self.matcher.sequencing_method(text)
+        self.assertEqual(seq_method, 'iontorrent')
+
+    def test_find_solexa_in_text(self):
+        text = "The resulting foobar were sequenced with help of SOLEXA."
+        seq_method = self.matcher.sequencing_method(text)
+        self.assertEqual(seq_method, 'solexa')
 
 if __name__ == '__main__':
     unittest.main()

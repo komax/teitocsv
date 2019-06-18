@@ -1,12 +1,12 @@
 import unittest
 
-from bacteria_regex import AccessionNumberMatcher, DataSourceMatcher, SequencingMethodMatcher
+import bacteria_regex
 
 
 class TestAccessionNumberMatcher(unittest.TestCase):
 
     def setUp(self):
-        self.matcher = AccessionNumberMatcher()
+        self.matcher = bacteria_regex.AccessionNumberMatcher()
 
     def test_studies_pattern_matches_once(self):
         text = """
@@ -23,7 +23,8 @@ class TestAccessionNumberMatcher(unittest.TestCase):
         This will give us this. DRP654321.
         """
         matches = self.matcher.accession_numbers(text)
-        self.assertEqual(['ERP123456', 'DRP654321'], matches)
+        expected = ['ERP123456', 'DRP654321']
+        self.assertCountEqual(expected, matches)
 
     def test_studies_pattern_does_not_match(self):
         text = """
@@ -45,7 +46,8 @@ class TestAccessionNumberMatcher(unittest.TestCase):
         This is a text with accession numbers ERS123456 and ERS654321.
         """
         matches = self.matcher.accession_numbers(text)
-        self.assertEqual(matches, ['ERS123456', 'ERS654321'])
+        expected = ['ERS123456', 'ERS654321']
+        self.assertCountEqual(matches, expected)
 
     def test_experiments_pattern_matches_four_times(self):
         text = """
@@ -53,7 +55,8 @@ class TestAccessionNumberMatcher(unittest.TestCase):
         SRX654321.
         """
         matches = self.matcher.accession_numbers(text)
-        self.assertEqual(matches, ['ERX123456', 'DRX123456', 'SRX123456', 'SRX654321'])
+        expected = ['ERX123456', 'DRX123456', 'SRX123456', 'SRX654321']
+        self.assertCountEqual(matches, expected)
 
     def test_analysis_pattern_matches_three_times(self):
         text = """
@@ -64,7 +67,8 @@ class TestAccessionNumberMatcher(unittest.TestCase):
         Accession number SRZ333222 is contained in  [Foobar, 2000].
         """
         accession_numbers = self.matcher.accession_numbers(text)
-        self.assertEqual(accession_numbers, ['ERZ111333', 'DRZ666333', 'SRZ333222'])
+        expected = ['ERZ111333', 'DRZ666333', 'SRZ333222']
+        self.assertCountEqual(accession_numbers, expected)
 
     def test_chinese_accession_number_matches(self):
         text = """
@@ -74,11 +78,19 @@ class TestAccessionNumberMatcher(unittest.TestCase):
         accession_numbers = self.matcher.accession_numbers(text)
         self.assertEqual(accession_numbers, ['PRJCA001121'])
 
+    def test_accession_no_occurence_twice_in_text(self):
+        text = """
+        This is a text with accession number ERP123456. 
+        This will give us this. ERP123456.
+        """
+        matches = self.matcher.accession_numbers(text)
+        self.assertEqual(['ERP123456'], matches)
+
 
 class DataSourceMatcherTest(unittest.TestCase):
 
     def setUp(self):
-        self.matcher = DataSourceMatcher()
+        self.matcher = bacteria_regex.DataSourceMatcher()
 
     def test_find_figshare(self):
         text = """
@@ -126,7 +138,7 @@ class DataSourceMatcherTest(unittest.TestCase):
 class SequencingMethodTestCase(unittest.TestCase):
     
     def setUp(self):
-        self.matcher = SequencingMethodMatcher()
+        self.matcher = bacteria_regex.SequencingMethodMatcher()
     
     def test_illumina_with_miseq(self):
         text = """
@@ -158,6 +170,17 @@ class SequencingMethodTestCase(unittest.TestCase):
         text = "The resulting foobar were sequenced with help of SOLEXA."
         seq_method = self.matcher.sequencing_method(text)
         self.assertEqual(seq_method, 'solexa')
+
+
+class GeneRegionsTest(unittest.TestCase):
+
+    def setUp(self):
+        self.matcher = bacteria_regex.GeneRegionsMatcher()
+
+    def test_singleton_occurence(self):
+        text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+        regions = self.matcher.gene_regions(text)
+        self.fail()
 
 if __name__ == '__main__':
     unittest.main()

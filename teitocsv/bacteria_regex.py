@@ -132,12 +132,16 @@ class SequencingMethodMatcher(UnionPatternMatcher):
 
 class Primer515Matcher(UnionPatternMatcher):
     def __init__(self):
-        primer_515 = [r'515\s*[fF]?', r'(?:Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3']
+        primer_515 = [
+            r'515\s*[fF]?',
+            r'[fF]\s*515',
+            r'(?:Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3'
+            ]
         
         super().__init__(patterns=primer_515)
     
     def primer_515(self, text, default_val=''):
-        self.match(text, default_val)
+        return self.match(text, default_val)
 
 
 class Primer806Matcher(UnionPatternMatcher):
@@ -147,7 +151,7 @@ class Primer806Matcher(UnionPatternMatcher):
         super().__init__(patterns=primer_806)
 
     def primer_806(self, text, default_val=''):
-        self.match(text, default_val)
+        return self.match(text, default_val)
 
 
 class GeneRegionsMatcher(UnionPatternMatcher):

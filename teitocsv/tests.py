@@ -180,7 +180,8 @@ class GeneRegionsTest(unittest.TestCase):
     def test_singleton_occurence(self):
         text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
         regions = self.matcher.gene_regions(text)
-        self.fail()
+        expected = set(["v4"])
+        self.assertCountEqual(regions, expected)
 
 if __name__ == '__main__':
     unittest.main()

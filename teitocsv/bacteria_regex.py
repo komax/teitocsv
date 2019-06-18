@@ -163,10 +163,12 @@ class GeneRegionsMatcher(UnionPatternMatcher):
         matches = self.regex.findall(text)
         regions = set()
         for match in matches:
-            regions.union(set(match))
-        # Remove empty str from the gene regions.
-        if '' in regions:
-            regions.remove('')
+            if match:
+                # check all groups but group(0)
+                for region in match[1:-1]:
+                    # Add only non-empty groups.
+                    if region:
+                        regions.add(region.lower())
         return regions
 
 

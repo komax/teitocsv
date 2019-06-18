@@ -71,7 +71,7 @@ class AccessionNumberMatcher(UnionPatternMatcher):
         super().__init__(patterns)
 
     def accession_numbers(self, text):
-        return self.matches(text)
+        return list(set(self.matches(text)))
 
 
 class DataSourceMatcher(UnionPatternMatcher):
@@ -159,11 +159,14 @@ class GeneRegionsMatcher(UnionPatternMatcher):
 
         super().__init__(patterns=gene_regions_patterns)
 
-    def gene_regions(self, text, default_val=''):
+    def gene_regions(self, text):
         matches = self.regex.findall(text)
         regions = set()
         for match in matches:
             regions.union(set(match))
+        # Remove empty str from the gene regions.
+        if '' in regions:
+            regions.remove('')
         return regions
 
 

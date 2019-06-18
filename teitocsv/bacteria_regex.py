@@ -151,6 +151,18 @@ class BacteriaMatcher(object):
         return BacteriaMatcher.accession_no_matcher.accession_numbers(text)
 
     @staticmethod
+    def data_source(text):
+        return BacteriaMatcher.data_source_matcher.data_source(text)
+
+    @staticmethod
     def matches_16ness(text):
         return BacteriaMatcher.gene_region_16ness.findall(text)
+
+    @staticmethod
+    def gene_regions(text):
+        return BacteriaMatcher.gene_regions_matcher.gene_regions(text)
+
+    @staticmethod
+    def sequencing_method(text):
+        return BacteriaMatcher.sequencing_matcher.sequencing_method(text)
 

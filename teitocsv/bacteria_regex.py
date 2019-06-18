@@ -110,7 +110,7 @@ class SequencingMethodMatcher(UnionPatternMatcher):
             if illumina_matches:
                 return [match.lower() for match in illumina_matches]
             else:
-                super().matches(text)
+                return super().matches(text)
         
 
     def match(self, text, default_val=''):
@@ -124,7 +124,7 @@ class SequencingMethodMatcher(UnionPatternMatcher):
                 match = illumina_match.group(0)
                 return match.lower()
             else:
-                super().match(text, default_val)
+                return super().match(text, default_val)
 
     def sequencing_method(self, text, default_val=''):
         return self.match(text, default_val)

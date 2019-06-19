@@ -136,8 +136,10 @@ class Primer515Matcher(UnionPatternMatcher):
             r'515\s*(:?[fF](?:wd)?)?',
             r'(:?[fF](?:wd)?)?\s*515',
             r'(?:Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3',
-            r"5'-GTGCCAGCMGCCGCGGTAA"
-            ]
+            r'GTGYCAGCMGCCGCGGTAA', # 515f modified.
+            r"5'-GTGCCAGCMGCCGCGGTAA", # 515f original.
+            r"AATGATACGGCGACCACCGAGATCTACACGCT\s+XXXXXXXXXXXX\s+TATGGTAATT\s+GT\s+GTGYCAGCMGCCGCGGTAA"
+        ]
         
         super().__init__(patterns=primer_515)
     
@@ -154,7 +156,10 @@ class Primer806Matcher(UnionPatternMatcher):
         primer_806 = [
             r'806\s*[rR]?', 
             r'(?:Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′',
-            r"5'-GGACTACHVHHHTWTCTAAT"
+            r"5'-GGACTACHVHHHTWTCTAAT",
+            r'GGACTACHVGGGTWTCTAAT', # 806r original.
+            r'GGACTACNVGGGTWTCTAAT', # 806r modified.
+            r'CAAGCAGAAGACGGCATACGAGAT\s+AGTCAGCCAG\s+CC\s+GGACTACNVGGGTWTCTAAT' # barcode
         ]
 
         super().__init__(patterns=primer_806)

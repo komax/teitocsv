@@ -154,7 +154,8 @@ class Primer515Matcher(UnionPatternMatcher):
 class Primer806Matcher(UnionPatternMatcher):
     def __init__(self):
         primer_806 = [
-            r'806\s*[rR]?', 
+            r'806\s*(:?[rR](?:ev)?)?',
+            r'(:?[rR](?:ev)?)?\s*806', 
             r'(?:Rev\s*)?5’-GGACTACHVGGGTWTCTAAT-3′',
             r"5'-GGACTACHVHHHTWTCTAAT",
             r'GGACTACHVGGGTWTCTAAT', # 806r original.

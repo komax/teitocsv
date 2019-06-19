@@ -223,25 +223,25 @@ class Primer515Test(unittest.TestCase):
     def setUp(self):
         self.matcher = bacteria_regex.Primer515Matcher()
 
-    def check_primer(self, text):
+    def check_primer_in(self, text):
         primer = self.matcher.primer_515(text)
         self.assertEqual(primer, "515f")
 
     def test_515f_cooccur_with806(self):
         text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_f515_matches(self):
         text = "primers                 F           515 and          R 806"
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_fwd_515_matches(self):
         text = "primers                 Fwd           515 and          Rev 806"
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_primer_as_string(self):
         text = "we are using super-Ursome primers 5'-GTGCCAGCMGCCGCGGTAA"
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_barcode_matches(self):
         text = """
@@ -251,7 +251,7 @@ class Primer515Test(unittest.TestCase):
            GT  GTGYCAGCMGCCGCGGTAA 
         because we have too much space in this paper.
         """
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_515f_original_pattern(self):
         text = """
@@ -259,18 +259,18 @@ class Primer515Test(unittest.TestCase):
         GTGCCAGCMGCCGCGGTAA
         because this primer rulez the world.
         """
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_modified_primer_sequence(self):
         text = """
         We used a primer priming this phrase which leads us to the sequence
         FWD:GTGYCAGCMGCCGCGGTAA
         """
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_515_primer_with_b_in_seq(self):
         text = "foo is a primer FWD5-GTGBCAGCMGCCGCGGTAA-3'"
-        self.check_primer(text)
+        self.check_primer_in(text)
 
     def test_no_primer(self):
         text = "Bogus, spam, ham and nothing but text."
@@ -289,6 +289,50 @@ class Primer806Test(unittest.TestCase):
 
     def test_806_cooccur_with515(self):
         text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+        self.check_primer_in(text)
+
+    def test_r806_matches(self):
+        text = "primers                 F           515 and          R 806"
+        self.check_primer_in(text)
+
+    def test_806_rev_matches(self):
+        text = "primers                 Fwd           515 and          806 REV"
+        self.check_primer_in(text)
+
+    def test_barcode_pattern_matches(self):
+        text = """
+        primer 
+        
+        CAAGCAGAAGACGGCATACGAGAT 
+        
+        
+        
+        AGTCAGCCAG 
+        
+        
+        CC 
+        
+        
+        GGACTACNVGGGTWTCTAAT
+        
+        weird text though.
+        """
+        self.check_primer_in(text)
+
+    def test_apprill_pattern_matches(self):
+        text = """
+        Apprill primer REV:GGACTACNVGGGTWTCTAAT with nice results as follows.
+        """
+        self.check_primer_in(text)
+
+    def test_for_caporaso_pattern(self):
+        text = """
+        Caporaso primer looks like this: REV:GGACTACHVGGGTWTCTAAT.
+        """
+        self.check_primer_in(text)
+
+    def test_16s_rna_v4_primer_matches(self):
+        text = "We sequenced 16S rRNA in region V4 with primer 5'-GGACTACHVHHHTWTCTAAT"
         self.check_primer_in(text)
 
     def test_no_primer(self):

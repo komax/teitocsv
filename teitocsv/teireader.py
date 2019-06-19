@@ -170,8 +170,12 @@ class BacteriaPaper(TEIFile):
 
     def data_source(self):
         return self._search_with(BacteriaMatcher.data_source)
-    
 
+    def has_515_primer(self):
+        return self._search_with(BacteriaMatcher.has_515_primer)
+
+    def has_806_primer(self):
+        return self._search_with(BacteriaMatcher.has_806_primer)
 
 
 def main():

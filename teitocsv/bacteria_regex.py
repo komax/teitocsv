@@ -230,3 +230,11 @@ class BacteriaMatcher(object):
     def sequencing_method(text):
         return BacteriaMatcher.sequencing_matcher.sequencing_method(text)
 
+    @staticmethod
+    def has_515_primer(text):
+        return bool(BacteriaMatcher.primer_515.primer_515(text))
+
+    @staticmethod
+    def has_806_primer(text):
+        return bool(BacteriaMatcher.primer_806.primer_806(text))
+

@@ -243,6 +243,39 @@ class Primer515Test(unittest.TestCase):
         primer = self.matcher.primer_515(text)
         self.assertEqual(primer, "515f")
 
+    def test_barcode_matches(self):
+        text = """
+        we used primer 
+        AATGATACGGCGACCACCGAGATCTACACGCT        
+         XXXXXXXXXXXX   TATGGTAATT  
+           GT  GTGYCAGCMGCCGCGGTAA 
+        because we have too much space in this paper.
+        """
+        primer = self.matcher.primer_515(text)
+        self.assertEqual(primer, "515f")
+
+    def test_515f_original_pattern(self):
+        text = """
+        This is some text. We used primer 
+        GTGCCAGCMGCCGCGGTAA
+        because this primer rulez the world.
+        """
+        primer = self.matcher.primer_515(text)
+        self.assertEqual(primer, "515f")
+
+    def test_modified_primer_sequence(self):
+        text = """
+        We used a primer priming this phrase which leads us to the sequence
+        FWD:GTGYCAGCMGCCGCGGTAA
+        """
+        primer = self.matcher.primer_515(text)
+        self.assertEqual(primer, "515f")
+
+    def test_515_primer_with_b_in_seq(self):
+        text = "foo is a primer FWD5-GTGBCAGCMGCCGCGGTAA-3'"
+        primer = self.matcher.primer_515(text)
+        self.assertEqual(primer, "515f")
+
     def test_no_primer(self):
         text = "Bogus, spam, ham and nothing but text."
         self.assertFalse(self.matcher.primer_515(text))

@@ -135,9 +135,9 @@ class Primer515Matcher(UnionPatternMatcher):
         primer_515 = [
             r'515\s*(:?[fF](?:wd)?)?',
             r'(:?[fF](?:wd)?)?\s*515',
-            r'(?:Fwd\s*)?5 -GTGBCAGCMGCCGCGGTAA-3',
-            r'GTGYCAGCMGCCGCGGTAA', # 515f modified.
-            r"5'-GTGCCAGCMGCCGCGGTAA", # 515f original.
+            r"GTGCCAGCMGCCGCGGTAA", # 515f original.
+            r'GTGYCAGCMGCCGCGGTAA', # 515f modified.  
+            r'(?:Fwd\s*)?5?\s*-?GTGBCAGCMGCCGCGGTAA\s*-?3?',
             r"AATGATACGGCGACCACCGAGATCTACACGCT\s+XXXXXXXXXXXX\s+TATGGTAATT\s+GT\s+GTGYCAGCMGCCGCGGTAA"
         ]
         

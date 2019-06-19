@@ -223,25 +223,25 @@ class Primer515Test(unittest.TestCase):
     def setUp(self):
         self.matcher = bacteria_regex.Primer515Matcher()
 
-    def test_515f_cooccur_with806(self):
-        text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+    def check_primer(self, text):
         primer = self.matcher.primer_515(text)
         self.assertEqual(primer, "515f")
+
+    def test_515f_cooccur_with806(self):
+        text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+        self.check_primer(text)
 
     def test_f515_matches(self):
         text = "primers                 F           515 and          R 806"
-        primer = self.matcher.primer_515(text)
-        self.assertEqual(primer, "515f")
+        self.check_primer(text)
 
     def test_fwd_515_matches(self):
         text = "primers                 Fwd           515 and          Rev 806"
-        primer = self.matcher.primer_515(text)
-        self.assertEqual(primer, "515f")
+        self.check_primer(text)
 
     def test_primer_as_string(self):
         text = "we are using super-Ursome primers 5'-GTGCCAGCMGCCGCGGTAA"
-        primer = self.matcher.primer_515(text)
-        self.assertEqual(primer, "515f")
+        self.check_primer(text)
 
     def test_barcode_matches(self):
         text = """
@@ -251,8 +251,7 @@ class Primer515Test(unittest.TestCase):
            GT  GTGYCAGCMGCCGCGGTAA 
         because we have too much space in this paper.
         """
-        primer = self.matcher.primer_515(text)
-        self.assertEqual(primer, "515f")
+        self.check_primer(text)
 
     def test_515f_original_pattern(self):
         text = """
@@ -260,21 +259,18 @@ class Primer515Test(unittest.TestCase):
         GTGCCAGCMGCCGCGGTAA
         because this primer rulez the world.
         """
-        primer = self.matcher.primer_515(text)
-        self.assertEqual(primer, "515f")
+        self.check_primer(text)
 
     def test_modified_primer_sequence(self):
         text = """
         We used a primer priming this phrase which leads us to the sequence
         FWD:GTGYCAGCMGCCGCGGTAA
         """
-        primer = self.matcher.primer_515(text)
-        self.assertEqual(primer, "515f")
+        self.check_primer(text)
 
     def test_515_primer_with_b_in_seq(self):
         text = "foo is a primer FWD5-GTGBCAGCMGCCGCGGTAA-3'"
-        primer = self.matcher.primer_515(text)
-        self.assertEqual(primer, "515f")
+        self.check_primer(text)
 
     def test_no_primer(self):
         text = "Bogus, spam, ham and nothing but text."

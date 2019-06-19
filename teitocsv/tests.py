@@ -283,10 +283,13 @@ class Primer806Test(unittest.TestCase):
     def setUp(self):
         self.matcher = bacteria_regex.Primer806Matcher()
 
-    def test_806_cooccur_with515(self):
-        text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+    def check_primer_in(self, text):
         primer = self.matcher.primer_806(text)
         self.assertEqual(primer, "806r")
+
+    def test_806_cooccur_with515(self):
+        text = "The V4 region of 16S rRNA genes was amplified from the DNA samples using the 515f/806r primer set."
+        self.check_primer_in(text)
 
     def test_no_primer(self):
         text = "Bogus, spam, ham and nothing but text."

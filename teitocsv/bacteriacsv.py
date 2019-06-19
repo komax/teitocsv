@@ -48,18 +48,22 @@ def tei_to_csv_entries(param):
     # Sequencing method.
     seq_method = tei.sequencing_method()
 
+    # Check for primers.
+    has_515_primer = tei.has_515_primer()
+    has_806_primer = tei.has_806_primer()
+
     # Output all gene regions.
     gene_regions = repr_gene_regions(tei.gene_regions())
 
     entries = []
     # Expand accession numbers from the paper if present.
     for accession_number in tei.accession_numbers():
-        entry = tei.basename(), tei.doi(), is_16_ness, accession_number, seq_method,  *gene_regions
+        entry = tei.basename(), tei.doi(), is_16_ness, accession_number, has_515_primer, has_806_primer, seq_method,  *gene_regions
         entries.append(entry)
     # Otherwise empty string.
     if not entries:
         data_source = tei.data_source()
-        entry = tei.basename(), tei.doi(), is_16_ness, data_source, seq_method, *gene_regions
+        entry = tei.basename(), tei.doi(), is_16_ness, data_source, has_515_primer, has_806_primer, seq_method, *gene_regions
         entries.append(entry)
     print(f"Handled {tei_file}")
     return entries
@@ -83,7 +87,7 @@ def main():
         csv_data.extend(entry)
     
     print("Done with parsing")
-    result_csv = pd.DataFrame(csv_data, columns=['ID', 'DOI', '16ness', 'accession', 'seq_method', 'gene_region1', 'gene_region2', 'gene_region3', 'gene_region4', 'gene_region5', 'gene_region6', 'gene_region7', 'gene_region8', 'gene_region_9'])
+    result_csv = pd.DataFrame(csv_data, columns=['ID', 'DOI', '16ness', 'accession', '515f', '806r', 'seq_method', 'gene_region1', 'gene_region2', 'gene_region3', 'gene_region4', 'gene_region5', 'gene_region6', 'gene_region7', 'gene_region8', 'gene_region_9'])
     print("Done with appending")
 
     result_csv.to_csv(args.outfile, index=False)

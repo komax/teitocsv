@@ -131,6 +131,14 @@ class BacteriaPaper(TEIFile):
             # Otherwise try to retrieve them from the pdftotext.
             return self.pdftotext.accession_numbers()
 
+    def doi(self):
+        doi_from_bs = super().doi()
+        if doi_from_bs:
+            return doi_from_bs
+        else:
+            # Resort pdftotext: try find doi in the beginning of the text.
+            return self.pdftotext.doi()
+
     def _has_match_16ness(self, text):
         matches = BacteriaMatcher.matches_16ness(self.text)
         return bool(matches)

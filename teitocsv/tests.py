@@ -2,6 +2,8 @@ import unittest
 
 import bacteria_regex
 
+from pdftotext_reader import digital_object_identifier
+
 
 class TestAccessionNumberMatcher(unittest.TestCase):
 
@@ -340,6 +342,25 @@ class Primer806Test(unittest.TestCase):
         self.assertFalse(self.matcher.primer_806(text))
     
 
+class DOIfromTextTest(unittest.TestCase):
+
+    def test_doi_with_space(self):
+        text = "Appl Environ Microbiol 83:e01672-17. https://doi.org/10.1128/AEM .12344-12"
+        doi = digital_object_identifier(text)
+        self.assertEqual("10.1128/AEM .12344-12", doi)
+
+    # Tests from https://www.regexpal.com/96937.
+    def test_regexpal_appelquist(self):
+        text = "Appelquist, T; Babich, R; Brower, RC; Buchoff, MI; Cheng, M; Clark, MA; Cohen, SD; Fleming, GT; Kiskis, J; Lin, MF; Neil, ET; Osborn, JC; Rebbi, C; Schaich, D; Syritsyn, S; Voronov, G; Vranas, P; Wasem, J~WW scattering parameters via pseudoscalar phase shifts~PHYSICAL REVIEW D~85~2012~ ~http://wok-ws.isiknowledge.com/WoS?recid=206452825#000302994100005~10.1103/PhysRevD.85.07450~0~ ~0~ ~21/11/2015 06:57:32.546000000,"
+        doi_expected = "10.1103/PhysRevD.85.07450~0"
+        doi_computed = digital_object_identifier(text)
+        self.assertEqual(doi_expected, doi_computed)
+
+    def test_regexpal_scattering(self):
+        text = "R.C. Brower (Boston U.), G.T. Fleming (Yale U.), H. Neuberger (Rutgers U., Piscataway)~Lattice Radial Quantization: 3D Ising~Phys. Lett. B~721~2013~299~~10.1016/j.physletb.2013.03.009~0~ ~0~ ~21/11/2015 06:57:32.546000000"
+        doi_expected = "10.1016/j.physletb.2013.03.009~0"
+        doi_computed = digital_object_identifier(text)
+        self.assertEqual(doi_expected, doi_computed)
 
 
 if __name__ == '__main__':

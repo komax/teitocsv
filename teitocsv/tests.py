@@ -301,6 +301,10 @@ class Primer806Test(unittest.TestCase):
         text = "primers                 Fwd           515 and          806 REV"
         self.check_primer_in(text)
 
+    def test_808_rev_with_b_matches(self):
+        text = "with primer 806Rb."
+        self.check_primer_in(text)
+
     def test_barcode_pattern_matches(self):
         text = """
         primer 
